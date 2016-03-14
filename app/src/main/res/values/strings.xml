@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BHW</string>
+    <string name="title">BLACK HOLE WARS</string>
+    <string name="enter1">Enter Player 1 Name:</string>
+    <string name="enter2">Enter Player 2 Name:</string>
+    <string name="diff">Enter Difficulty:</string>
+    <string name="startGame">Start Game</string>
+    <string-array name="diffs">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+        <item>EXTREME</item>
+    </string-array>
+    <string name="action_settings">Settings</string>
+</resources>

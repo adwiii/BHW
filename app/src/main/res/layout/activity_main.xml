@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                tools:context=".MainActivity" android:background="#000">
+
+    <TextView
+        android:text="@string/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace-condensed"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+        android:textSize="25dp" android:textColor="#fff" android:id="@+id/textView3"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textView"
+        android:textColor="#fff" android:text="@string/enter1" android:layout_below="@+id/textView3"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:layout_marginTop="84dp"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:id="@+id/p1Name" android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:textColor="#fff"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enter2"
+        android:id="@+id/textView2" android:layout_below="@+id/p1Name"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp" android:textColor="#fff"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:id="@+id/p2Name" android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:textColor="#fff"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/diff"
+        android:id="@+id/textView4" android:layout_below="@+id/p2Name"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:textColor="#fff"/>
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/diffSpinner" android:layout_below="@+id/textView4"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:entries="@array/diffs"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/startGame"
+        android:id="@+id/startButton"
+        android:layout_alignParentBottom="true" android:layout_centerHorizontal="true"
+        android:background="#555" android:textColor="#fff"/>
+
+</RelativeLayout>

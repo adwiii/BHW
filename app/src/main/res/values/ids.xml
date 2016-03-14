@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="XTAG" type="id">XTAG</item>
+    <item name="YTAG" type="id">YTAG</item>
+    <item name="PRIORITY_TAG" type="id">PRIORITY_TAG</item>
+</resources>
