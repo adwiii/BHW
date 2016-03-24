@@ -27,7 +27,8 @@ public class BHThread extends Thread{
             try {
                 canvas = sh.lockCanvas(null);
                 synchronized (sh) {
-                    space.onDraw(canvas);
+//                    space.onDraw(canvas);
+                    space.postInvalidate();
                 }
             } finally {
                 if (canvas != null) {

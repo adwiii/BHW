@@ -47,6 +47,7 @@ public class Player {
             case 3:
                 bhc = EXTREME;
         }
+        bhs = new ArrayList<>();
         this.home = home;
     }
 
@@ -65,5 +66,9 @@ public class Player {
 
     public void removePts(ArrayList<Point> pts) {
         home.removeAll(pts);
+    }
+
+    public ArrayList<Point> getHome() {
+        return home;
     }
 }

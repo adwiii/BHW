@@ -29,7 +29,7 @@ public class GameActivity extends AppCompatActivity {
 
     public int currentSelectedPriority;
 
-    public ArrayList<Player> players;
+    private ArrayList<Player> players;
 
     BHSpace space;
 
@@ -46,11 +46,7 @@ public class GameActivity extends AppCompatActivity {
 
         Log.e("BHW", "Game");
 
-//        setContentView(R.layout.activity_game);
-
         diff = getIntent().getIntExtra(DIFF, 0);
-
-//        gameLayout = (GridLayout) findViewById(R.id.gameLayout);
 
         space = new BHSpace(this);
         setContentView(space);
@@ -108,7 +104,6 @@ public class GameActivity extends AppCompatActivity {
 //                gameLayout.addView(b, i, j);
             }
         }
-//        gameLayout.invalidate();
     }
 
     private void newTurn() {
@@ -145,11 +140,23 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private ArrayList<BH> getAll() {
+    public ArrayList<BH> getAll() {
         ArrayList<BH> all = new ArrayList<>();
         for (Player p : players) {
             all.addAll(p.getBHs());
         }
         return all;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
