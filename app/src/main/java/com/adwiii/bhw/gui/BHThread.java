@@ -17,7 +17,7 @@ public class BHThread extends Thread{
         this.sh = sh;
     }
 
-    public void setRunnable(boolean run) {
+    public void setRunning(boolean run) {
         this.run = run;
     }
 

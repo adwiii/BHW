@@ -82,10 +82,12 @@ public class GameActivity extends AppCompatActivity {
         p2Home = new ArrayList<>();
 
 //        Button b;
-
+        Point[][] points = new Point[width][height];
+        Point p;
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                ((j < height / 2) ? p1Home : p2Home).add(new Point(i, j));
+                ((j < height / 2) ? p1Home : p2Home).add(p = new Point(i, j));
+                points[i][j] = p;
 //                b = new Button(this);
 //                b.setOnClickListener(this);
 //                GridLayout.LayoutParams p = new GridLayout.LayoutParams();

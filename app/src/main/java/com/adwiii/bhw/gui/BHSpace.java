@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
@@ -14,13 +16,17 @@ import android.view.SurfaceView;
 
 import com.adwiii.bhw.GameActivity;
 import com.adwiii.bhw.game.BH;
-import com.adwiii.bhw.game.Player;
 
 /**
  * Created by Trey on 3/24/2016.
+ *
+ * See this for some basis information:
+ * http://stackoverflow.com/questions/24890900/using-a-custom-surfaceview-and-thread-for-android-game-programming-example
  */
 public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
+    private static float MAX_SCALE = 5f; //TODO tune
+    private static float MIN_SCALE = .1f;
     BHThread bhThread;
     /*
 
@@ -28,30 +34,47 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
     private float cellWidth = 50;
     private float cellHeight = 50;
 
-    private int rowWidth;
-    private int columnHeight;
+
+    private int bhWidth;
+    private int bhHeight;
 
     private GameActivity game;
 
     private int offx; // used to handle scroll offsets
     private int offy;
-    private int assumedWidth = 1080;
+    private int assumedWidth = 1080; // values assumed for size, good for painting
     private int assumedHeight = 1920;
     private float gscale = 1;
 
     private static final int BORDER = Color.GRAY;
 
-    public BHSpace(Context c) {
-        super(c);
-        game = (GameActivity) c;
+    private Point[][] points;
+
+    public BHSpace(Context context) {
+        super(context);
+
+        TypedValue tv = new TypedValue();
+        int actionBarHeight = 0;
+        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+        }
+        assumedHeight -= actionBarHeight; // we should also account for the notif bar probably.
+
+        game = (GameActivity) context;
         getHolder().addCallback(this);
         bhThread = new  BHThread(getHolder(), this);
         setWillNotDraw(false);
 
-        mScaleDetector = new ScaleGestureDetector(c, new ScaleListener());
+        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
+        tapDetector = new GestureDetector(context, new TapListener());
 //        setMinimumWidth(game.getWindowManager().getDefaultDisplay().getWidth());
     }
 
+    public void setPoints(Point[][] points) {
+        this.points = points;
+        bhWidth = points.length;
+        bhHeight = points[0].length;
+    }
     @Override
     public void onDraw(Canvas c) {
 //        Log.e("PAINT", "HALLO");
@@ -78,10 +101,19 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         //DRAW BORDERS
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(BORDER);
-        for (Player player : game.getPlayers()) {
-            for (Point p : player.getHome()) {
-                r.set((int) (p.x * cellWidth), (int) (p.y * cellHeight), (int) ((p.x + 1) * cellWidth), (int) ((p.y + 1) * cellHeight));
-                c.drawRect(r, paint);
+        Point p;
+        if (points != null) {
+            for (int i = 0; i < points.length; i++) {
+                for (int j = 0; j < points[i].length; j++) {
+                    p = points[i][j];
+                    r.set((int) (p.x*cellWidth), (int) (p.y*cellHeight), (int) ((p.x+1)*cellWidth), (int) ((p.y+1)*cellHeight));
+                    c.drawRect(r, paint);
+                    if (j == points[i].length / 2) { // draw center line
+                        paint.setStrokeWidth(3);
+                        c.drawLine(r.left, r.top, r.right, r.top, paint);
+                        paint.setStrokeWidth(1);
+                    }
+                }
             }
         }
 
@@ -89,18 +121,32 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 //        c.drawLine(0f, getHeight() / 2f, getWidth(), getHeight() / 2f, paint);
     }
 
+
     private static final int INVALID_POINTER_ID = -1;
 
     // The ‘active pointer’ is the one currently moving our object.
     private int mActivePointerId = INVALID_POINTER_ID;
     private ScaleGestureDetector mScaleDetector;
-    private float mScaleFactor = 1.f;
+    private GestureDetector tapDetector;
+    private float mScaleFactor = 1f;
     private float mLastTouchX, mLastTouchY;
+    private boolean singleTap;
+    /**
+     * Information on the below from:
+     * http://android-developers.blogspot.com/2010/06/making-sense-of-multitouch.html
+     */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         Log.e("TOUCH", ev.getX() + " " + ev.getY());
-        // Let the ScaleGestureDetector inspect all events.
+        // Let the ScaleGestureDetector inspect all events
         mScaleDetector.onTouchEvent(ev);
+        singleTap = false;
+        singleTap = tapDetector.onTouchEvent(ev);
+
+        if (singleTap) {
+            //select code
+            return true;
+        }
 
         final int action = ev.getAction();
         switch (action & MotionEvent.ACTION_MASK) {
@@ -126,6 +172,10 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
                     offx += dx;
                     offy += dy;
+
+                    offx = Math.max(offx, Math.min(offx, bhWidth * (int) cellWidth));
+                    offy = Math.max(offy, Math.min(offy, bhHeight * (int) cellWidth));
+
 
                     invalidate();
                 }
@@ -153,7 +203,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
                 if (pointerId == mActivePointerId) {
                     // This was our active pointer going up. Choose a new
                     // active pointer and adjust accordingly.
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                    final int newPointerIndex = (pointerIndex == 0) ? 1 : 0;
                     mLastTouchX = ev.getX(newPointerIndex);
                     mLastTouchY = ev.getY(newPointerIndex);
                     mActivePointerId = ev.getPointerId(newPointerIndex);
@@ -171,37 +221,47 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
             gscale *= detector.getScaleFactor();
             
             // Don't let the object get too small or too large.
-            gscale = Math.max(0.1f, Math.min(gscale, 5.0f));
+            gscale = Math.max(MIN_SCALE, Math.min(gscale, MAX_SCALE));
             
             invalidate();
             return true;
         }
     }
 
+    private class TapListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            singleTap = true;
+            return true;
+        }
+    }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        bhThread.setRunnable(true);
+        bhThread.setRunning(true);
         bhThread.start();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        if (bhThread == null) {
+            bhThread = new BHThread(this.getHolder(), this);
+            bhThread.setRunning(true);
+            bhThread.start();
+        }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        bhThread.setRunnable(false);
+        bhThread.setRunning(false);
         boolean retry = true;
         while (retry) {
             try{
                 bhThread.join();
                 retry = false;
             } catch (InterruptedException e) {
-
+                //idrc, if this happens we have bigger problems
             }
-            break;
         }
         bhThread = null;
     }
