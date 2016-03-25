@@ -108,7 +108,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
                     p = points[i][j];
                     r.set((int) (p.x*cellWidth), (int) (p.y*cellHeight), (int) ((p.x+1)*cellWidth), (int) ((p.y+1)*cellHeight));
                     c.drawRect(r, paint);
-                    if (j == points[i].length / 2) { // draw center line
+                    if (j == points[i].length/2) { // draw center line
                         paint.setStrokeWidth(3);
                         c.drawLine(r.left, r.top, r.right, r.top, paint);
                         paint.setStrokeWidth(1);
@@ -116,9 +116,6 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
-
-        //draw center line
-//        c.drawLine(0f, getHeight() / 2f, getWidth(), getHeight() / 2f, paint);
     }
 
 
@@ -144,6 +141,16 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         singleTap = tapDetector.onTouchEvent(ev);
 
         if (singleTap) {
+            float x = ev.getX() / gscale - offx; // in theory corrected for translations
+            float y = ev.getY() / gscale - offy;
+            x /= cellWidth;
+            y /= cellHeight;
+            Log.e("TOUCH", x + ", " + y);
+            game.playBH((int) x,(int) y); // add a BH to check touch
+
+
+            //TODO add turn logic here
+
             //select code
             return true;
         }
@@ -229,12 +236,14 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     private class TapListener extends GestureDetector.SimpleOnGestureListener {
+        //If we ever need any other detections, this class has double tap etc.
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             singleTap = true;
             return true;
         }
     }
+
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {

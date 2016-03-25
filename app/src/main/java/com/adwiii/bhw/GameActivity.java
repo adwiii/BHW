@@ -88,22 +88,6 @@ public class GameActivity extends AppCompatActivity {
             for (int j = 0; j < height; j++) {
                 ((j < height / 2) ? p1Home : p2Home).add(p = new Point(i, j));
                 points[i][j] = p;
-//                b = new Button(this);
-//                b.setOnClickListener(this);
-//                GridLayout.LayoutParams p = new GridLayout.LayoutParams();
-//                //maybe?
-//                p.rowSpec = GridLayout.spec(j, 1, 1f);
-//                p.columnSpec = GridLayout.spec(i, 1, 1f);
-//                b.setWidth(10);
-//                b.setHeight(10);
-//                b.setText("HI");
-//                b.setLayoutParams(p);
-//                b.setTag(R.id.XTAG, i);
-//                b.setTag(R.id.YTAG, j);
-//                b.setTag(R.id.PRIORITY_TAG, 0);
-//                b.setBackgroundColor(Color.WHITE);
-//                buttons[i][j] = b;
-//                gameLayout.addView(b, i, j);
             }
         }
     }
@@ -160,5 +144,9 @@ public class GameActivity extends AppCompatActivity {
 
     public int getHeight() {
         return height;
+    }
+
+    public void playBH(int x, int y) {
+        players.get(turn).addBH(x, y, currentSelectedPriority);
     }
 }
