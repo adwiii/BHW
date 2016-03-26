@@ -79,6 +79,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
     }
     @Override
     public void onDraw(Canvas c) {
+        GameActivity.hideSystemUI(this);
 //        Log.e("PAINT", "HALLO");
         c.drawColor(Color.WHITE);
         Paint paint = new Paint();

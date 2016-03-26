@@ -1,5 +1,6 @@
 package com.adwiii.bhw.game;
 
+import android.graphics.Color;
 import android.graphics.Point;
 
 import java.util.ArrayList;
@@ -11,13 +12,16 @@ public class BH implements Comparable<BH> {
     private boolean dead;
     private int priority;
     private Expandable me;
-    private int color;
+    private int color, deadColor;
 
     public BH(int x, int y, int priority, int color) {
         me = new BHRect(x, y);
         this.priority = priority;
         dead = false;
+        dead = true;
         this.color = color;
+        // red * 0.299 + green * 0.587 + blue * 0.114 ( this did not work very well)
+        deadColor = Color.argb(0xff, (Color.red(color) + 128) / 2, (Color.green(color) + 128) / 2, (Color.blue(color) + 128) / 2); // ???
     }
 
     public void expand() {
@@ -50,6 +54,10 @@ public class BH implements Comparable<BH> {
     }
 
     public int getColor() {
-        return color;
+        if (dead) {
+            return deadColor;
+        } else {
+            return color;
+        }
     }
 }
