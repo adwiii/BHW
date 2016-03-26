@@ -48,6 +48,7 @@ public class GameActivity extends AppCompatActivity {
 
     ArrayList<Point> p1Home;
     ArrayList<Point> p2Home;
+
     @Override
     public void onCreate(Bundle b) {
         super.onCreate(b);
@@ -93,6 +94,13 @@ public class GameActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
+    private void refreshButtons() {
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            int z = getCurrentPlayer().getAvailableCount(i);
+            ((RadioButton) radioGroup.getChildAt(i)).setText(""+(z < 0 ? DecimalFormatSymbols.getInstance().getInfinity() : z)); // THIS MUST BE A STRING
+        }
+    }
+
     private void initGUI() {
         RadioButton rb;
         for (int i = 0; i < Player.getNumDiffs(diff); i++) {
@@ -109,8 +117,7 @@ public class GameActivity extends AppCompatActivity {
             );
             rb.setButtonTintList(colorStateList);
             int z = getCurrentPlayer().getAvailableCount(i);
-            rb.setText(""+(z == -1 ? DecimalFormatSymbols.getInstance().getInfinity() : z)
-            ); // THIS MUST BE A STRING
+            rb.setText(""+(z < 0 ? DecimalFormatSymbols.getInstance().getInfinity() : z)); // THIS MUST BE A STRING
             Log.e("RADIO", rb.getText()+"");
             radioGroup.addView(rb);
         }

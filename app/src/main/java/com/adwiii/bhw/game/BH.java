@@ -18,7 +18,6 @@ public class BH implements Comparable<BH> {
         me = new BHRect(x, y);
         this.priority = priority;
         dead = false;
-        dead = true;
         this.color = color;
         // red * 0.299 + green * 0.587 + blue * 0.114 ( this did not work very well)
         deadColor = Color.argb(0xff, (Color.red(color) + 128) / 2, (Color.green(color) + 128) / 2, (Color.blue(color) + 128) / 2); // ???
