@@ -2,8 +2,10 @@ package com.adwiii.bhw.game;
 
 import android.graphics.Color;
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Trey on 3/8/2016.
@@ -17,11 +19,12 @@ public class Player {
 
     public static final int[] cols = new int[]{
             Color.CYAN,
-            0xFF8000, //orange
+            0xFFFF8000, //orange
             Color.GREEN,
             Color.RED,
             Color.BLUE,
-            0x32CD32, //dark green
+            0xFFFF00FF,
+            0xFF32CD32, //dark green
             Color.BLACK
     };
 
@@ -47,6 +50,7 @@ public class Player {
             case 3:
                 bhc = EXTREME;
         }
+        bhc = Arrays.copyOf(bhc, bhc.length);
         bhs = new ArrayList<>();
         this.home = home;
     }
@@ -56,8 +60,9 @@ public class Player {
     }
 
     public void addBH(int x, int y, int priority) {
-        bhs.add(new BH(x, y, priority, cols[cols.length - bhc.length - priority + 1]));
-        bhc[priority - 1]--;
+        Log.e("BH", x + ", " + y + ": " + priority);
+        bhs.add(new BH(x, y, priority, cols[cols.length - bhc.length + priority]));
+        bhc[priority]--;
     }
 
     public ArrayList<BH> getBHs() {
@@ -70,5 +75,23 @@ public class Player {
 
     public ArrayList<Point> getHome() {
         return home;
+    }
+
+    public static int getNumDiffs(int diff) {
+        switch (diff) {
+            case 0:
+                return EASY.length;
+            case 1:
+                return MED.length;
+            case 2:
+                return HARD.length;
+            case 3:
+                return EXTREME.length;
+        }
+        return -1;
+    }
+
+    public int getAvailableCount(int i) {
+        return bhc[i];
     }
 }

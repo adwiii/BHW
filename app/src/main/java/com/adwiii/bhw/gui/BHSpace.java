@@ -25,8 +25,9 @@ import com.adwiii.bhw.game.BH;
  */
 public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
-    private static float MAX_SCALE = 5f; //TODO tune
-    private static float MIN_SCALE = .1f;
+    private static float MAX_SCALE = 3f; //TODO tune
+    private static float MIN_SCALE = .5f;
+    private static int PADDING = 5;
     BHThread bhThread;
     /*
 
@@ -80,10 +81,21 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 //        Log.e("PAINT", "HALLO");
         c.drawColor(Color.WHITE);
         Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-//        c.drawText("HALLO", 5f, 5f, paint);
+        paint.setColor(Color.RED);
+        float text = 30;
+        paint.setTextSize(text);
+        c.drawText(String.format("%d.0, %d.0", offx, offy), text + 5, text + 5, paint);
 
 //        gscale = (float) Math.min((double)getWidth()/assumedWidth, (double)getHeight()/assumedHeight);
+
+        //FIXME this ends up having the left and right fight when its a high zoom
+//        if (gscale < 1) {
+//            offx = Math.max(PADDING, Math.min(offx, (int) ((getWidth()-bhWidth*(int) cellWidth)/gscale)-PADDING));
+//            offy = Math.max(PADDING, Math.min(offy, (int) ((getHeight()-bhHeight*(int) cellWidth)/gscale)-PADDING));
+//        } else {
+//
+//        }
+
         c.translate(offx, offy);
         c.scale(gscale, gscale);
 
@@ -91,7 +103,9 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
         paint.setStyle(Paint.Style.FILL);
         for (BH bh : game.getAll()) {
+            Log.e("BHP", bh.getColor() + "");
             paint.setColor(bh.getColor());
+//            paint.setColor(Color.MAGENTA);
             for(Point p : bh.getPoints()) {
                 r.set((int) (p.x * cellWidth), (int) (p.y * cellHeight), (int) ((p.x + 1) * cellWidth), (int) ((p.y + 1) * cellHeight));
                 c.drawRect(r, paint);
@@ -106,12 +120,13 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
             for (int i = 0; i < points.length; i++) {
                 for (int j = 0; j < points[i].length; j++) {
                     p = points[i][j];
-                    r.set((int) (p.x*cellWidth), (int) (p.y*cellHeight), (int) ((p.x+1)*cellWidth), (int) ((p.y+1)*cellHeight));
+                    r.set((int) (p.x * cellWidth), (int) (p.y * cellHeight), (int) ((p.x + 1) * cellWidth), (int) ((p.y + 1) * cellHeight));
                     c.drawRect(r, paint);
                     if (j == points[i].length/2) { // draw center line
+                        float temp = paint.getStrokeWidth();
                         paint.setStrokeWidth(3);
                         c.drawLine(r.left, r.top, r.right, r.top, paint);
-                        paint.setStrokeWidth(1);
+                        paint.setStrokeWidth(temp);
                     }
                 }
             }
@@ -134,18 +149,19 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
      */
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Log.e("TOUCH", ev.getX() + " " + ev.getY());
+//        Log.e("TOUCH", ev.getX() + " " + ev.getY());
         // Let the ScaleGestureDetector inspect all events
         mScaleDetector.onTouchEvent(ev);
         singleTap = false;
-        singleTap = tapDetector.onTouchEvent(ev);
+        //single tap will be set to true by the next method call
+        tapDetector.onTouchEvent(ev);
 
         if (singleTap) {
             float x = ev.getX() / gscale - offx; // in theory corrected for translations
             float y = ev.getY() / gscale - offy;
             x /= cellWidth;
             y /= cellHeight;
-            Log.e("TOUCH", x + ", " + y);
+            Log.e("TOUCHYY", x + ", " + y);
             game.playBH((int) x,(int) y); // add a BH to check touch
 
 
@@ -179,9 +195,6 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
                     offx += dx;
                     offy += dy;
-
-                    offx = Math.max(offx, Math.min(offx, bhWidth * (int) cellWidth));
-                    offy = Math.max(offy, Math.min(offy, bhHeight * (int) cellWidth));
 
 
                     invalidate();
@@ -238,7 +251,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
     private class TapListener extends GestureDetector.SimpleOnGestureListener {
         //If we ever need any other detections, this class has double tap etc.
         @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
+        public boolean onSingleTapUp(MotionEvent e) {
             singleTap = true;
             return true;
         }

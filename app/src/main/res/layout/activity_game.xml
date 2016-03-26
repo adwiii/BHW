@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/gameLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="fill_horizontal|fill_vertical"
             android:scaleType="matrix">
-    <BHSpace
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/gameCanvas"
-        android:layout_gravity="center"/>
-</FrameLayout>
+    <RadioGroup
+                  android:orientation="horizontal"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:id = "@+id/radio_bar" android:layout_alignParentStart="true">
+
+    </RadioGroup>
+    <include layout = "@layout/game_canvas" />
+</RelativeLayout>

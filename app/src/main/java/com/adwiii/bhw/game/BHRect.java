@@ -17,6 +17,7 @@ public class BHRect implements Expandable {
     public BHRect(int x, int y) {
         me = new Rect(x, y, x, y);
         pts = new ArrayList<>();
+        pts.add(new Point(x, y));
     }
 
     @Override
