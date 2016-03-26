@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
@@ -103,7 +104,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
         paint.setStyle(Paint.Style.FILL);
         for (BH bh : game.getAll()) {
-            Log.e("BHP", bh.getColor() + "");
+            Log.e("BHP", bh.getColor()+"");
             paint.setColor(bh.getColor());
 //            paint.setColor(Color.MAGENTA);
             for(Point p : bh.getPoints()) {
@@ -117,12 +118,12 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(BORDER);
         Point p;
         if (points != null) {
-            for (int i = 0; i < points.length; i++) {
-                for (int j = 0; j < points[i].length; j++) {
-                    p = points[i][j];
-                    r.set((int) (p.x * cellWidth), (int) (p.y * cellHeight), (int) ((p.x + 1) * cellWidth), (int) ((p.y + 1) * cellHeight));
+            for (Point[] point : points) {
+                for (int j = 0; j < point.length; j++) {
+                    p = point[j];
+                    r.set((int) (p.x*cellWidth), (int) (p.y*cellHeight), (int) ((p.x+1)*cellWidth), (int) ((p.y+1)*cellHeight));
                     c.drawRect(r, paint);
-                    if (j == points[i].length/2) { // draw center line
+                    if (j == point.length/2) { // draw center line
                         float temp = paint.getStrokeWidth();
                         paint.setStrokeWidth(3);
                         c.drawLine(r.left, r.top, r.right, r.top, paint);
@@ -148,7 +149,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
      * http://android-developers.blogspot.com/2010/06/making-sense-of-multitouch.html
      */
     @Override
-    public boolean onTouchEvent(MotionEvent ev) {
+    public boolean onTouchEvent(@NonNull MotionEvent ev) {
 //        Log.e("TOUCH", ev.getX() + " " + ev.getY());
         // Let the ScaleGestureDetector inspect all events
         mScaleDetector.onTouchEvent(ev);
@@ -157,13 +158,14 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         tapDetector.onTouchEvent(ev);
 
         if (singleTap) {
-            float x = ev.getX() / gscale - offx; // in theory corrected for translations
-            float y = ev.getY() / gscale - offy;
+            Log.e("TOUCHY", ev.getX() + ", " + ev.getY());
+
+            float x = (ev.getX() - offx) / gscale;
+            float y = (ev.getY() - offy) / gscale;
             x /= cellWidth;
             y /= cellHeight;
             Log.e("TOUCHYY", x + ", " + y);
             game.playBH((int) x,(int) y); // add a BH to check touch
-
 
             //TODO add turn logic here
 
@@ -195,7 +197,6 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
                     offx += dx;
                     offy += dy;
-
 
                     invalidate();
                 }
