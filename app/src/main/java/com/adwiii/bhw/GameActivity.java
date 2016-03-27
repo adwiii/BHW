@@ -86,6 +86,7 @@ public class GameActivity extends Activity {
 
     // This snippet hides the system bars.
     public static void hideSystemUI(View v) {
+        //TODO find a better way to do this
         // Set the IMMERSIVE flag.
         // Set the content to appear under the system bars so that the content
         // doesn't resize when the system bars hide and show.
@@ -192,8 +193,6 @@ public class GameActivity extends Activity {
                     }
                 });
         AlertDialog alert = builder.create();
-//        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        space.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
         alert.show();
 
         Player p = getCurrentPlayer();
@@ -214,7 +213,16 @@ public class GameActivity extends Activity {
         for (int i = 0; i < players.size(); i++) {
             players.get(i).removePts(pts);
             if (players.get(i).lose()) {
-                //TODO dialog and stuff
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(players.get((i + 1) % players.size()).getName() + " wins!")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                finish(); // this should kill the system
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         }
     }
