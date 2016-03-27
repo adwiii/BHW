@@ -27,13 +27,13 @@ public class BHRect implements Expandable {
         me.top--;
         me.bottom++;
         //add the points to the array to return
-        for (int i = 0; i < me.right - me.left; i++) {
+        for (int i = 0; i <= me.right - me.left; i++) {
             pts.add(new Point(me.left + i, me.top));
             pts.add(new Point(me.left + i, me.bottom));
         }
-        for (int i = 1; i < me.bottom - me.top - 1; i++) {
+        for (int i = 1; i <= me.bottom - me.top - 1; i++) {
             pts.add(new Point(me.left, me.top + i));
-            pts.add(new Point(me.right, me.bottom + i));
+            pts.add(new Point(me.right, me.top + i));
         }
     }
 

@@ -1,10 +1,12 @@
 package com.adwiii.bhw;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by Trey on 3/8/2016.
  */
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends Activity {
 
     public static final String P1_NAME = "p1Name";
     public static final String P2_NAME = "p2Name";
@@ -57,10 +59,6 @@ public class GameActivity extends AppCompatActivity {
 
         diff = getIntent().getIntExtra(DIFF, 0);
 
-        players = new ArrayList<>();
-        players.add(new Player(getIntent().getStringExtra(P1_NAME), diff, p1Home));
-        players.add(new Player(getIntent().getStringExtra(P2_NAME), diff, p2Home));
-
         LinearLayout top = new LinearLayout(this);
         top.setOrientation(LinearLayout.VERTICAL);
         space = new BHSpace(this);
@@ -70,6 +68,12 @@ public class GameActivity extends AppCompatActivity {
         top.addView(space);
 
         initGUI();
+
+        players = new ArrayList<>();
+        players.add(new Player(getIntent().getStringExtra(P1_NAME), diff, p1Home));
+        players.add(new Player(getIntent().getStringExtra(P2_NAME), diff, p2Home));
+
+        refreshButtons();
 
         setContentView(top);
 
@@ -116,9 +120,9 @@ public class GameActivity extends AppCompatActivity {
                     }
             );
             rb.setButtonTintList(colorStateList);
-            int z = getCurrentPlayer().getAvailableCount(i);
-            rb.setText(""+(z < 0 ? DecimalFormatSymbols.getInstance().getInfinity() : z)); // THIS MUST BE A STRING
-            Log.e("RADIO", rb.getText()+"");
+//            int z = getCurrentPlayer().getAvailableCount(i);
+//            rb.setText(""+(z < 0 ? DecimalFormatSymbols.getInstance().getInfinity() : z)); // THIS MUST BE A STRING
+//            Log.e("RADIO", rb.getText()+"");
             radioGroup.addView(rb);
         }
 
@@ -173,7 +177,26 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void newTurn() {
-        Player p = players.get(turn);
+        checkWin();
+
+        turn++;
+
+        refreshButtons();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Please pass to " + getCurrentPlayer().getName())
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //do nothing
+                    }
+                });
+        AlertDialog alert = builder.create();
+//        alert.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        space.setSystemUiVisibility(View.STATUS_BAR_HIDDEN);
+        alert.show();
+
+        Player p = getCurrentPlayer();
         for (BH bh : p.getBHs()) {
             bh.expand();
         }
@@ -190,7 +213,9 @@ public class GameActivity extends AppCompatActivity {
         }
         for (int i = 0; i < players.size(); i++) {
             players.get(i).removePts(pts);
-//            if (players.get(i).lose())
+            if (players.get(i).lose()) {
+                //TODO dialog and stuff
+            }
         }
     }
 
@@ -227,7 +252,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void playBH(int x, int y) {
-        players.get(turn).addBH(x, y, currentSelectedPriority);
+        Point p = new Point(x, y);
+        for (BH bh : getAll()) {
+            if (bh.getPoints().contains(p)) return;
+        }
+        getCurrentPlayer().addBH(x, y, currentSelectedPriority);
+        newTurn();
     }
 
     public Player getCurrentPlayer() {

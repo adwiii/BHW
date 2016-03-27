@@ -98,6 +98,23 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 //
 //        }
 
+//        if (offx > cellWidth * points.length) {
+//            offx = (int) cellWidth * points.length;
+//        }
+//        if (offy > cellHeight * points[0].length) {
+//            offy = (int) cellHeight * points[0].length;
+//        }
+
+        if (gscale < 1) {
+            offx = Math.max(PADDING, Math.min((int) (getWidth() - cellWidth * points.length * gscale) - PADDING, offx));
+            offy = Math.max(PADDING, Math.min((int) (getHeight() - cellHeight * points[0].length * gscale) - PADDING, offy));
+        } else {
+
+        }
+//        float x = (ev.getX() - offx) / gscale;
+//        float y = (ev.getY() - offy) / gscale;
+
+
         c.translate(offx, offy);
         c.scale(gscale, gscale);
 
@@ -105,7 +122,6 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
         paint.setStyle(Paint.Style.FILL);
         for (BH bh : game.getAll()) {
-            Log.e("BHP", bh.getColor()+"");
             paint.setColor(bh.getColor());
 //            paint.setColor(Color.MAGENTA);
             for(Point p : bh.getPoints()) {
@@ -167,6 +183,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
             y /= cellHeight;
             Log.e("TOUCHYY", x + ", " + y);
             game.playBH((int) x,(int) y); // add a BH to check touch
+
 
             //TODO add turn logic here
 

@@ -76,6 +76,14 @@ public class Player {
     public ArrayList<Point> getHome() {
         return home;
     }
+    
+    /**
+     * This method should be overriden by any AI subclasses so the controller knows whether to detect inputs for it.
+     * @return If this Player is an AI.
+     */
+    public boolean isAI() {
+        return false;
+    }
 
     public static int getNumDiffs(int diff) {
         switch (diff) {
@@ -93,5 +101,13 @@ public class Player {
 
     public int getAvailableCount(int i) {
         return bhc[i];
+    }
+    
+    public String getName() {
+        return name;
+    }
+
+    public boolean lose() {
+        return home.size() == 0;
     }
 }
