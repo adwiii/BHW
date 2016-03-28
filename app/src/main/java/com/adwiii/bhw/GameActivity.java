@@ -12,10 +12,13 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.adwiii.bhw.game.BH;
 import com.adwiii.bhw.game.Player;
 import com.adwiii.bhw.gui.BHSpace;
+
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -42,7 +45,9 @@ public class GameActivity extends Activity {
 
     BHSpace space;
     RadioGroup radioGroup;
-
+    TextView turnName;
+    TextView p1left;
+    TextView p2left;
     int width = 0;
     int height = 0;
 
@@ -64,8 +69,16 @@ public class GameActivity extends Activity {
         space = new BHSpace(this);
         radioGroup = new RadioGroup(this);
         radioGroup.setOrientation(RadioGroup.HORIZONTAL);
+        LinearLayout cont = (LinearLayout) getLayoutInflater().inflate(R.layout.info_bar, null);
+        Log.e("TOP", cont.getChildCount() + "");
+        for (int i = 0; i < cont.getChildCount(); i++) {
+            Log.e("TOP", ((TextView) cont.getChildAt(i)).getText().toString() + "");
+        }
+        top.addView(cont);
         top.addView(radioGroup);
         top.addView(space);
+
+        setContentView(top);
 
         initGUI();
 
@@ -75,7 +88,7 @@ public class GameActivity extends Activity {
 
         refreshButtons();
 
-        setContentView(top);
+//        setContentView(top);
 
         hideSystemUI(space);
 
@@ -104,6 +117,11 @@ public class GameActivity extends Activity {
             int z = getCurrentPlayer().getAvailableCount(i);
             ((RadioButton) radioGroup.getChildAt(i)).setText(""+(z < 0 ? DecimalFormatSymbols.getInstance().getInfinity() : z)); // THIS MUST BE A STRING
         }
+        turnName.setText(getCurrentPlayer().getName() + getResources().getString(R.string.turnName));
+        Player p = players.get(0);
+        p1left.setText(p.getName() + getResources().getString(R.string.left) + p.getHome().size());
+        p = players.get(1);
+        p2left.setText(p.getName() + getResources().getString(R.string.left) + p.getHome().size());
     }
 
     private void initGUI() {
@@ -167,6 +185,10 @@ public class GameActivity extends Activity {
             }
         }
         space.setPoints(points);
+
+        turnName = (TextView) findViewById(R.id.turnName);
+        p1left = (TextView) findViewById(R.id.p1left);
+        p2left = (TextView) findViewById(R.id.p2left);
     }
 
     @Override
@@ -182,6 +204,14 @@ public class GameActivity extends Activity {
 
         turn++;
 
+        Player p = getCurrentPlayer();
+        for (BH bh : p.getBHs()) {
+            bh.expand();
+        }
+        checkIntersections(); //this also kills
+
+        checkWin();
+
         refreshButtons();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -194,14 +224,6 @@ public class GameActivity extends Activity {
                 });
         AlertDialog alert = builder.create();
         alert.show();
-
-        Player p = getCurrentPlayer();
-        for (BH bh : p.getBHs()) {
-            bh.expand();
-        }
-        checkIntersections(); //this also kills
-
-        checkWin();
     }
 
     private void checkWin() {

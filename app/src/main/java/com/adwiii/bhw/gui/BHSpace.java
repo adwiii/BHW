@@ -55,13 +55,13 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
     public BHSpace(Context context) {
         super(context);
 
-        TypedValue tv = new TypedValue();
-        int actionBarHeight = 0;
-        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-        }
-        assumedHeight -= actionBarHeight; // we should also account for the notif bar probably.
-
+//        TypedValue tv = new TypedValue();
+//        int actionBarHeight = 0;
+//        if (context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+//            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
+//        }
+//        assumedHeight -= actionBarHeight; // we should also account for the notif bar probably.
+        if (!(context instanceof GameActivity)) return;
         game = (GameActivity) context;
         getHolder().addCallback(this);
         bhThread = new  BHThread(getHolder(), this);
@@ -77,6 +77,12 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         bhWidth = points.length;
         bhHeight = points[0].length;
     }
+
+    @Override
+    public boolean isInEditMode() {
+        return true;
+    }
+
     @Override
     public void onDraw(Canvas c) {
         GameActivity.hideSystemUI(this);

@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:id="@+id/topCont"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true">
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/turnName"
+        android:id="@+id/turnName"
+        android:editable="false"
+        android:layout_margin="2dp"
+        android:layout_gravity="center|fill"
+        android:layout_alignParentLeft="true"
+        android:focusable="false"/>
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/left"
+        android:id="@+id/p1left"
+        android:editable="false"
+        android:layout_margin="2dp"
+        android:layout_gravity="center|fill"
+        android:layout_toRightOf="@id/turnName"/>
+
+    <TextView
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/left"
+        android:id="@+id/p2left"
+        android:editable="false"
+        android:layout_margin="2dp"
+        android:layout_gravity="center|fill"
+        android:layout_toRightOf="@id/p1left"/>
+</LinearLayout>
