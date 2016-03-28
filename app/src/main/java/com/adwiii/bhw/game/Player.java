@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
+ * Class for holding Player data instance. This should be subclassed by all AIs
  * Created by Trey on 3/8/2016.
  */
 public class Player {
@@ -56,7 +57,7 @@ public class Player {
     }
 
     public boolean canPlay(int priority) {
-        return bhc[priority - 1] != 0;
+        return bhc[priority] != 0;
     }
 
     public void addBH(int x, int y, int priority) {

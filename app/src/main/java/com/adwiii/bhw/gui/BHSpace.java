@@ -106,7 +106,10 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
      * Draws the main board
      * TODO this could probably be made more efficient by checking bounds before drawing so as to not render off screen
      * Optimization ideas:
-     * @param c
+     * Don't draw BHs that are outside of the grid as they have no affect on the game
+     * Have the BHs hold an internal path object that can be painted to eliminate the need to constantly traverse points
+     *              It is worth noting that points are used to begin with in case a BH wishes to expand radially instead of rectangularly
+     * @param c The canvas to draw on.
      */
     @Override
     public void onDraw(Canvas c) {
@@ -136,12 +139,12 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 //            offy = (int) cellHeight * points[0].length;
 //        }
 
-        if (gscale < 1) {
-            offx = Math.max(PADDING, Math.min((int) (getWidth() - cellWidth * points.length * gscale) - PADDING, offx));
-            offy = Math.max(PADDING, Math.min((int) (getHeight() - cellHeight * points[0].length * gscale) - PADDING, offy));
-        } else {
-
-        }
+//        if (gscale < 1) {
+//            offx = Math.max(PADDING, Math.min((int) (getWidth() - cellWidth * points.length * gscale) - PADDING, offx));
+//            offy = Math.max(PADDING, Math.min((int) (getHeight() - cellHeight * points[0].length * gscale) - PADDING, offy));
+//        } else {
+//
+//        }
 //        float x = (ev.getX() - offx) / gscale;
 //        float y = (ev.getY() - offy) / gscale;
 
@@ -167,7 +170,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
          */
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(BORDER);
-        float centerWidth = 3 / ((gscale < 1) ? 1 : gscale); // divide by gscale so the border is visible when zoomed out
+        float centerWidth = cellHeight / 5; // divide by gscale so the border is visible when zoomed out
         for (int i = 0; i < bhWidth + 1; i++) {
             c.drawLine( i * cellWidth, 0, i * cellWidth, cellHeight * bhHeight, paint);
         }
@@ -177,15 +180,16 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         }
         int i = bhHeight / 2;
         float temp = paint.getStrokeWidth();
+        paint.setColor(Color.BLACK);
         paint.setStrokeWidth(centerWidth);
         c.drawLine(0, i * cellHeight, cellWidth * bhWidth, i * cellHeight, paint);
         paint.setStrokeWidth(temp);
 
         paint.setColor(Color.BLACK);
         paint.setTextSize(cellHeight);
-        String s = game.getPlayers().get(1).getName() + getResources().getString(R.string.home);
+        String s = game.getPlayers().get(0).getName() + getResources().getString(R.string.home);
         c.drawText(s, (cellWidth * bhWidth - paint.measureText(s)) / 2, - cellHeight / 2, paint);
-        s = game.getPlayers().get(0).getName() + getResources().getString(R.string.home);
+        s = game.getPlayers().get(1).getName() + getResources().getString(R.string.home);
         c.drawText(s, (cellWidth * bhWidth - paint.measureText(s)) / 2, cellHeight * bhHeight + cellHeight, paint);
     }
 

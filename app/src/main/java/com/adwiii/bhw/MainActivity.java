@@ -1,5 +1,6 @@
 package com.adwiii.bhw;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -12,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends Activity implements View.OnClickListener{
 
     EditText p1Name;
     EditText p2Name;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         start = (Button) findViewById(R.id.startButton);
 
         start.setOnClickListener(this);
+        Util.hideSystemUI(this);
     }
 
     @Override

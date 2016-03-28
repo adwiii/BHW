@@ -26,6 +26,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
 /**
+ * Activity to handle the main flow of the game.
  * Created by Trey on 3/8/2016.
  */
 public class GameActivity extends Activity {
@@ -93,27 +94,11 @@ public class GameActivity extends Activity {
 
 //        setContentView(top);
 
-        hideSystemUI();
+        Util.hideSystemUI(this);
 
 //        setContentView(R.layout.activity_game);
 
 
-    }
-
-    // This snippet hides the system bars.
-    public void hideSystemUI() {
-        //TODO find a better way to do this
-        // Set the IMMERSIVE flag.
-        // Set the content to appear under the system bars so that the content
-        // doesn't resize when the system bars hide and show.
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        v.setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-//                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-//                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
     private void refreshButtons() {
@@ -198,7 +183,7 @@ public class GameActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        hideSystemUI();
+        Util.hideSystemUI(this);
     }
 
     @Override
