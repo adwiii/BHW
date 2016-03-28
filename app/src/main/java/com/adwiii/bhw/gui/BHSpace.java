@@ -299,11 +299,20 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
+
+            float x = (detector.getFocusX() - offx) / gscale;
+            float y = (detector.getFocusY() - offy) / gscale;
+
+            float oldg = gscale;
             gscale *= detector.getScaleFactor();
             
             // Don't let the object get too small or too large.
             gscale = Math.max(MIN_SCALE, Math.min(gscale, MAX_SCALE));
-            
+
+            offx = (int) (detector.getFocusX() - x * gscale);
+            offy = (int) (detector.getFocusY() - y * gscale);
+
+
             invalidate();
             return true;
         }
