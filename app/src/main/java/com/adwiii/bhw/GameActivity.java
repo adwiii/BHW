@@ -36,6 +36,7 @@ public class GameActivity extends Activity {
 
     public static final int PLAY = 1;
     public static final int PAUSE = 2;
+    public static final long GRAPHICS_DELAY = 16;
 
     public int state;
 
@@ -162,13 +163,13 @@ public class GameActivity extends Activity {
                 width = 20;
                 break;
             case 1://medium
-                width = 30;
+                width = 25;
                 break;
             case 2://hard
-                width = 45;
+                width = 30;
                 break;
             case 3://extreme
-                width = 50;
+                width = 35;
                 break;
         }
         if (height == 0) {
@@ -288,7 +289,14 @@ public class GameActivity extends Activity {
         return height;
     }
 
+    /**
+     * This method plays a BH at the location if it is a legal move. If it is a legal move, then
+     * the method increments the turn counts appropriately, otherwise, noting happens
+     * @param x The x location to play the black hole
+     * @param y The y location to play the black hole
+     */
     public void playBH(int x, int y) {
+        if (!getCurrentPlayer().canPlay(currentSelectedPriority)) return;
         if (x < 0 || y < 0 || x >= width || y >= height) return;
         Point p = new Point(x, y);
         for (BH bh : getAll()) {

@@ -102,6 +102,12 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         return true;
     }
 
+    /**
+     * Draws the main board
+     * TODO this could probably be made more efficient by checking bounds before drawing so as to not render off screen
+     * Optimization ideas:
+     * @param c
+     */
     @Override
     public void onDraw(Canvas c) {
 //        game.hideSystemUI();
@@ -156,24 +162,24 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         //DRAW BORDERS
+        /*
+        Drawing them this way is O(n) instead of the O(n^2) that I was doing iterating the points
+         */
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(BORDER);
-        Point p;
-        if (points != null) {
-            for (Point[] point : points) {
-                for (int j = 0; j < point.length; j++) {
-                    p = point[j];
-                    r.set((int) (p.x*cellWidth), (int) (p.y*cellHeight), (int) ((p.x+1)*cellWidth), (int) ((p.y+1)*cellHeight));
-                    c.drawRect(r, paint);
-                    if (j == point.length/2) { // draw center line
-                        float temp = paint.getStrokeWidth();
-                        paint.setStrokeWidth(3);
-                        c.drawLine(r.left, r.top, r.right, r.top, paint);
-                        paint.setStrokeWidth(temp);
-                    }
-                }
-            }
+        float centerWidth = 3 / ((gscale < 1) ? 1 : gscale); // divide by gscale so the border is visible when zoomed out
+        for (int i = 0; i < bhWidth + 1; i++) {
+            c.drawLine( i * cellWidth, 0, i * cellWidth, cellHeight * bhHeight, paint);
         }
+        for (int i = 0; i < bhHeight + 1; i++) {
+            if (i == bhHeight / 2) continue;
+            c.drawLine(0, i * cellHeight, cellWidth * bhWidth, i * cellHeight, paint);
+        }
+        int i = bhHeight / 2;
+        float temp = paint.getStrokeWidth();
+        paint.setStrokeWidth(centerWidth);
+        c.drawLine(0, i * cellHeight, cellWidth * bhWidth, i * cellHeight, paint);
+        paint.setStrokeWidth(temp);
 
         paint.setColor(Color.BLACK);
         paint.setTextSize(cellHeight);
