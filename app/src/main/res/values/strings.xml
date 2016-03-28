@@ -14,4 +14,8 @@
     <string name="action_settings">Settings</string>
     <string name="turnName">\'s turn</string>
     <string name="left">&#160;left:&#160;</string>
+    <string name="pass">Please pass to&#160;</string>
+    <string name="home">\'s home</string>
+    <string name="p2Name">Player 2</string>
+    <string name="p1Name">Player 1</string>
 </resources>

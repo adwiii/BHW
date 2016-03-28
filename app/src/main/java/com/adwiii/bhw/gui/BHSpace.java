@@ -16,6 +16,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.adwiii.bhw.GameActivity;
+import com.adwiii.bhw.R;
 import com.adwiii.bhw.game.BH;
 
 /**
@@ -69,6 +70,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
         mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
         tapDetector = new GestureDetector(context, new TapListener());
+
 //        setMinimumWidth(game.getWindowManager().getDefaultDisplay().getWidth());
     }
 
@@ -76,6 +78,23 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         this.points = points;
         bhWidth = points.length;
         bhHeight = points[0].length;
+
+        centerOffs();
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        centerOffs();
+    }
+
+    private void centerOffs() {
+        offx = (int) ((getWidth() - cellWidth * bhWidth) / 2);
+        Log.e("WWDE", getWidth() + "");
+        Log.e("WIDE", cellWidth * bhWidth + "");
+        offy = (int) ((getHeight() - cellHeight * bhHeight) / 2);
+        Log.e("HHHT", getHeight() + "");
+        Log.e("HGHT", cellHeight * bhHeight + "");
     }
 
     @Override
@@ -85,7 +104,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void onDraw(Canvas c) {
-        GameActivity.hideSystemUI(this);
+//        game.hideSystemUI();
 //        Log.e("PAINT", "HALLO");
         c.drawColor(Color.WHITE);
         Paint paint = new Paint();
@@ -155,6 +174,13 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
                 }
             }
         }
+
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(cellHeight);
+        String s = game.getPlayers().get(1).getName() + getResources().getString(R.string.home);
+        c.drawText(s, (cellWidth * bhWidth - paint.measureText(s)) / 2, - cellHeight / 2, paint);
+        s = game.getPlayers().get(0).getName() + getResources().getString(R.string.home);
+        c.drawText(s, (cellWidth * bhWidth - paint.measureText(s)) / 2, cellHeight * bhHeight + cellHeight, paint);
     }
 
 

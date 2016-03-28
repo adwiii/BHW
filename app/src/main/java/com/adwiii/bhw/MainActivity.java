@@ -1,6 +1,7 @@
 package com.adwiii.bhw;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,7 +28,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         p1Name = (EditText) findViewById(R.id.p1Name);
+        p1Name.setText(R.string.p1Name);
         p2Name = (EditText) findViewById(R.id.p2Name);
+        p2Name.setText(R.string.p2Name);
 
         diff = (Spinner) findViewById(R.id.diffSpinner);
 
@@ -68,5 +71,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }

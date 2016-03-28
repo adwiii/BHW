@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -90,7 +92,7 @@ public class GameActivity extends Activity {
 
 //        setContentView(top);
 
-        hideSystemUI(space);
+        hideSystemUI();
 
 //        setContentView(R.layout.activity_game);
 
@@ -98,18 +100,19 @@ public class GameActivity extends Activity {
     }
 
     // This snippet hides the system bars.
-    public static void hideSystemUI(View v) {
+    public void hideSystemUI() {
         //TODO find a better way to do this
         // Set the IMMERSIVE flag.
         // Set the content to appear under the system bars so that the content
         // doesn't resize when the system bars hide and show.
-        v.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        v.setSystemUiVisibility(
+//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+//                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+//                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
     }
 
     private void refreshButtons() {
@@ -194,9 +197,12 @@ public class GameActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        if (space != null) {
-            this.hideSystemUI(space);
-        }
+        hideSystemUI();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     private void newTurn() {
@@ -215,7 +221,7 @@ public class GameActivity extends Activity {
         refreshButtons();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Please pass to " + getCurrentPlayer().getName())
+        builder.setMessage(getResources().getString(R.string.pass) + getCurrentPlayer().getName())
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -223,6 +229,7 @@ public class GameActivity extends Activity {
                     }
                 });
         AlertDialog alert = builder.create();
+        alert.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         alert.show();
     }
 
@@ -282,6 +289,7 @@ public class GameActivity extends Activity {
     }
 
     public void playBH(int x, int y) {
+        if (x < 0 || y < 0 || x >= width || y >= height) return;
         Point p = new Point(x, y);
         for (BH bh : getAll()) {
             if (bh.getPoints().contains(p)) return;
