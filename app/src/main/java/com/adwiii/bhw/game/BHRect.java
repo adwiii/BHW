@@ -35,6 +35,7 @@ public class BHRect implements Expandable {
             pts.add(new Point(me.left, me.top + i));
             pts.add(new Point(me.right, me.top + i));
         }
+        rad++;
     }
 
     @Override

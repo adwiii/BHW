@@ -18,4 +18,7 @@
     <string name="home">\'s home</string>
     <string name="p2Name">Player 2</string>
     <string name="p1Name">Player 1</string>
+    <string name="square">Square</string>
+    <string name="circle">Circle</string>
+    <string name="type">Choose Black Hole Type:</string>
 </resources>

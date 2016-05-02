@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -19,8 +18,6 @@ import android.widget.TextView;
 import com.adwiii.bhw.game.BH;
 import com.adwiii.bhw.game.Player;
 import com.adwiii.bhw.gui.BHSpace;
-
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -34,12 +31,15 @@ public class GameActivity extends Activity {
     public static final String P1_NAME = "p1Name";
     public static final String P2_NAME = "p2Name";
     public static final String DIFF = "diff";
+    public static final String BH_TYPE = "type";
 
     public static final int PLAY = 1;
     public static final int PAUSE = 2;
     public static final long GRAPHICS_DELAY = 16;
 
     public int state;
+
+    public int BHtype = 0;
 
     public int turn = 0;
 
@@ -86,10 +86,18 @@ public class GameActivity extends Activity {
 
         initGUI();
 
-        players = new ArrayList<>();
-        players.add(new Player(getIntent().getStringExtra(P1_NAME), diff, p1Home));
-        players.add(new Player(getIntent().getStringExtra(P2_NAME), diff, p2Home));
+        int type = getIntent().getIntExtra(BH_TYPE, 0);
+        switch (type) {
+            case R.id.circleButton: BHtype = 1;
+                break;
+            case R.id.squareButton: BHtype = 0;
+                break;
+            default: BHtype = 0;
+        }
 
+        players = new ArrayList<>();
+        players.add(new Player(getIntent().getStringExtra(P1_NAME), diff, p1Home, BHtype));
+        players.add(new Player(getIntent().getStringExtra(P2_NAME), diff, p2Home, BHtype));
         refreshButtons();
 
 //        setContentView(top);

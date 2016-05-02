@@ -13,9 +13,17 @@ public class BH implements Comparable<BH> {
     private int priority;
     private Expandable me;
     private int color, deadColor;
-
-    public BH(int x, int y, int priority, int color) {
-        me = new BHRect(x, y);
+    private Point center;
+    public BH(int x, int y, int priority, int color, int type) {
+        center = new Point(x, y);
+        switch (type) {
+            case 0: me = new BHRect(x, y);
+                break;
+            case 1: me = new BHCircle(x, y);
+                break;
+            default: me = new BHRect(x, y);
+                break;
+        }
         this.priority = priority;
         dead = false;
         this.color = color;
@@ -43,10 +51,17 @@ public class BH implements Comparable<BH> {
         return me.getPoints();
     }
 
+    public Point getCenter() {
+        return center;
+    }
+
     public void kill() {
         dead = true;
     }
 
+    public int getSize() {
+        return me.getSize();
+    }
     @Override
     public int compareTo(BH other) {
         return priority - other.priority;

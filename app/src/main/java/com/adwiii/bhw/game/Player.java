@@ -32,12 +32,13 @@ public class Player {
     private String name;
     private ArrayList<BH> bhs;
     private int[] bhc; //to be initialized based on desired choices of bh priorities available
-    private Object BHs;
-
+//    private Object BHs;
+    private int BHtype = 0;
     private ArrayList<Point> home;
 
-    public Player(String name, int diff, ArrayList<Point> home) {
+    public Player(String name, int diff, ArrayList<Point> home, int BHtype) {
         this.name = name;
+        this.BHtype = BHtype;
         switch (diff) {
             case 0:
                 bhc = EASY;
@@ -62,7 +63,7 @@ public class Player {
 
     public void addBH(int x, int y, int priority) {
         Log.e("BH", x + ", " + y + ": " + priority);
-        bhs.add(new BH(x, y, priority, cols[cols.length - bhc.length + priority]));
+        bhs.add(new BH(x, y, priority, cols[cols.length - bhc.length + priority], BHtype));
         bhc[priority]--;
     }
 

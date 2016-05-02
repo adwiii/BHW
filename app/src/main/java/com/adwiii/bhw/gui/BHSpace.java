@@ -8,7 +8,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -93,8 +92,8 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         Log.e("WWDE", getWidth() + "");
         Log.e("WIDE", cellWidth * bhWidth + "");
         offy = (int) ((getHeight() - cellHeight * bhHeight) / 2);
-        Log.e("HHHT", getHeight() + "");
-        Log.e("HGHT", cellHeight * bhHeight + "");
+        Log.e("HHHT", getHeight()+"");
+        Log.e("HGHT", cellHeight*bhHeight+"");
     }
 
     @Override
@@ -162,6 +161,8 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
                 r.set((int) (p.x * cellWidth), (int) (p.y * cellHeight), (int) ((p.x + 1) * cellWidth), (int) ((p.y + 1) * cellHeight));
                 c.drawRect(r, paint);
             }
+            paint.setColor(getContrastColor(bh.getColor()));
+            c.drawText(bh.getSize() + "", bh.getCenter().x * cellWidth + (cellWidth - paint.measureText(bh.getSize() + "")) / 2, (bh.getCenter().y  + 1)* cellHeight  - (paint.getTextSize() + cellHeight) / 4, paint);
         }
 
         //DRAW BORDERS
@@ -193,6 +194,14 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         c.drawText(s, (cellWidth * bhWidth - paint.measureText(s)) / 2, cellHeight * bhHeight + cellHeight, paint);
     }
 
+
+    /**
+     * Taken from http://stackoverflow.com/questions/4672271/reverse-opposing-colors
+     */
+    public static int getContrastColor (int color) {
+        double y = (299 * Color.red(color) + 587 * Color.green(color) + 114 * Color.blue(color)) / 1000;
+        return y >= 128 ? Color.BLACK : Color.WHITE;
+    }
 
     private static final int INVALID_POINTER_ID = -1;
 
@@ -321,6 +330,9 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        if(bhThread == null) {
+            bhThread = new  BHThread(getHolder(), this);
+        }
         bhThread.setRunning(true);
         bhThread.start();
     }
