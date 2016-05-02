@@ -119,7 +119,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         paint.setColor(Color.RED);
         float text = 30;
         paint.setTextSize(text);
-        c.drawText(String.format("%d.0, %d.0", offx, offy), text + 5, text + 5, paint);
+//        c.drawText(String.format("%d.0, %d.0", offx, offy), text + 5, text + 5, paint);
 
 //        gscale = (float) Math.min((double)getWidth()/assumedWidth, (double)getHeight()/assumedHeight);
 
