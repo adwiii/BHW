@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import com.adwiii.bhw.game.BH;
 import com.adwiii.bhw.game.Player;
 import com.adwiii.bhw.gui.BHSpace;
+
+import org.w3c.dom.Text;
 
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -64,7 +67,7 @@ public class GameActivity extends Activity {
     public void onCreate(Bundle b) {
         super.onCreate(b);
 
-        Log.e("BHW", "Game");
+//        Log.e("BHW", "Game");
 
         diff = getIntent().getIntExtra(DIFF, 0);
 
@@ -74,10 +77,10 @@ public class GameActivity extends Activity {
         radioGroup = new RadioGroup(this);
         radioGroup.setOrientation(RadioGroup.HORIZONTAL);
         LinearLayout cont = (LinearLayout) getLayoutInflater().inflate(R.layout.info_bar, null);
-        Log.e("TOP", cont.getChildCount() + "");
-        for (int i = 0; i < cont.getChildCount(); i++) {
-            Log.e("TOP", ((TextView) cont.getChildAt(i)).getText().toString() + "");
-        }
+//        Log.e("TOP", cont.getChildCount() + "");
+//        for (int i = 0; i < cont.getChildCount(); i++) {
+//            Log.e("TOP", ((TextView) cont.getChildAt(i)).getText().toString() + "");
+//        }
         top.addView(cont);
         top.addView(radioGroup);
         top.addView(space);

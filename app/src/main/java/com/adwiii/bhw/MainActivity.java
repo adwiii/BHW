@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
+//import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 
 public class MainActivity extends Activity implements View.OnClickListener{
@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             Intent i = new Intent(this, GameActivity.class);
             i.putExtra(GameActivity.P1_NAME, p1Name.getText().toString());
             i.putExtra(GameActivity.P2_NAME, p2Name.getText().toString());
-            Log.e("diff", diff.getSelectedItemPosition()+"");
+//            Log.e("diff", diff.getSelectedItemPosition() + "");
             i.putExtra(GameActivity.DIFF, diff.getSelectedItemPosition());
             i.putExtra(GameActivity.BH_TYPE, type.getCheckedRadioButtonId());
             startActivity(i);
