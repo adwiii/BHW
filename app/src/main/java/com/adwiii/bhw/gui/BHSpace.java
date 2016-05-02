@@ -92,8 +92,8 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         Log.e("WWDE", getWidth() + "");
         Log.e("WIDE", cellWidth * bhWidth + "");
         offy = (int) ((getHeight() - cellHeight * bhHeight) / 2);
-//        Log.e("HHHT", getHeight() + "");
-//        Log.e("HGHT", cellHeight * bhHeight + "");
+        Log.e("HHHT", getHeight() + "");
+        Log.e("HGHT", cellHeight * bhHeight + "");
     }
 
     @Override
@@ -121,6 +121,32 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         paint.setTextSize(text);
         c.drawText(String.format("%d.0, %d.0", offx, offy), text + 5, text + 5, paint);
 
+//        gscale = (float) Math.min((double)getWidth()/assumedWidth, (double)getHeight()/assumedHeight);
+
+        //FIXME this ends up having the left and right fight when its a high zoom
+//        if (gscale < 1) {
+//            offx = Math.max(PADDING, Math.min(offx, (int) ((getWidth()-bhWidth*(int) cellWidth)/gscale)-PADDING));
+//            offy = Math.max(PADDING, Math.min(offy, (int) ((getHeight()-bhHeight*(int) cellWidth)/gscale)-PADDING));
+//        } else {
+//
+//        }
+
+//        if (offx > cellWidth * points.length) {
+//            offx = (int) cellWidth * points.length;
+//        }
+//        if (offy > cellHeight * points[0].length) {
+//            offy = (int) cellHeight * points[0].length;
+//        }
+
+//        if (gscale < 1) {
+//            offx = Math.max(PADDING, Math.min((int) (getWidth() - cellWidth * points.length * gscale) - PADDING, offx));
+//            offy = Math.max(PADDING, Math.min((int) (getHeight() - cellHeight * points[0].length * gscale) - PADDING, offy));
+//        } else {
+//
+//        }
+//        float x = (ev.getX() - offx) / gscale;
+//        float y = (ev.getY() - offy) / gscale;
+
 
         c.translate(offx, offy);
         c.scale(gscale, gscale);
@@ -136,7 +162,8 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
                 c.drawRect(r, paint);
             }
             paint.setColor(getContrastColor(bh.getColor()));
-            c.drawText(bh.getSize() + "", bh.getCenter().x * cellWidth + (cellWidth - paint.measureText(bh.getSize() + "")) / 2, (bh.getCenter().y  + 1)* cellHeight  - (paint.getTextSize() + cellHeight) / 4, paint);
+            String s = bh.getSize() + "";
+            c.drawText(s, bh.getCenter().x * cellWidth + (cellWidth - paint.measureText(s)) / 2, (bh.getCenter().y + 1) * cellHeight - (cellHeight - paint.getTextSize()) / 2, paint);
         }
 
         //DRAW BORDERS
@@ -168,6 +195,10 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
         c.drawText(s, (cellWidth * bhWidth - paint.measureText(s)) / 2, cellHeight * bhHeight + cellHeight, paint);
     }
 
+    public static int getContrastColor(int color) {
+        double y = (299 * Color.red(color) + 587 * Color.green(color) + 114 * Color.blue(color)) / 1000;
+        return y >= 128 ? Color.BLACK : Color.WHITE;
+    }
 
     private static final int INVALID_POINTER_ID = -1;
 
@@ -198,7 +229,7 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
             float y = (ev.getY() - offy) / gscale;
             x /= cellWidth;
             y /= cellHeight;
-//            Log.e("TOUCHYY", x + ", " + y);
+            Log.e("TOUCHYY", x + ", " + y);
             game.playBH((int) x,(int) y); // add a BH to check touch
 
 
@@ -274,19 +305,10 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-
-            float x = (detector.getFocusX() - offx) / gscale;
-            float y = (detector.getFocusY() - offy) / gscale;
-
-            float oldg = gscale;
             gscale *= detector.getScaleFactor();
             
             // Don't let the object get too small or too large.
             gscale = Math.max(MIN_SCALE, Math.min(gscale, MAX_SCALE));
-
-            offx = (int) (detector.getFocusX() - x * gscale);
-            offy = (int) (detector.getFocusY() - y * gscale);
-
 
             invalidate();
             return true;
@@ -305,9 +327,6 @@ public class BHSpace extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        if(bhThread == null) {
-            bhThread = new  BHThread(getHolder(), this);
-        }
         bhThread.setRunning(true);
         bhThread.start();
     }

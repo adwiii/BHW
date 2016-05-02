@@ -8,8 +8,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -19,8 +17,6 @@ import android.widget.TextView;
 import com.adwiii.bhw.game.BH;
 import com.adwiii.bhw.game.Player;
 import com.adwiii.bhw.gui.BHSpace;
-
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
